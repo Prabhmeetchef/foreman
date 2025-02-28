@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col justify-between overflow-hidden">
       {/* Navigation */}
-      <div className="flex items-center justify-between py-4 px-20 mb-20">
+      <nav className="flex items-center justify-center py-4 px-20 gap-80">
         <div className="flex items-center">
           <Link href="/" className="text-2xl font-bold">
             <Image src="/logo@1x.png" alt="Logo" width={120} height={40} />
@@ -22,11 +22,15 @@ export default function Home() {
         <div>
           <Link
             href="/signin"
-            className="bg-amber-100 hover:bg-amber-200 text-amber-900 px-6 py-2 rounded-full transition-colors font-medium hover:font-semibold"
+            className="text-[18px] bg-[#F6F0E5] hover:bg-amber-200 text-amber-900 px-[30px] py-[11px] rounded-full transition-colors font-medium hover:font-semibold"
           >
             Signin
           </Link>
         </div>
+      </nav>
+
+      <div className="container mx-auto px-4 mb-20">
+        <div className="border-t border-[#f2f2f2]"></div>
       </div>
 
       {/* Hero Section */}

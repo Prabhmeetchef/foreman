@@ -1,34 +1,29 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import Image from "next/image";
+import { authOptions } from "@/lib/auth"; // ✅ Correct import
+import SignInButton from "./signin-button"; // ✅ New server-action-based signin
 
-import { signIn, useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+export default async function SignIn() {
+  const session = await getServerSession(authOptions);
 
-export default function SignIn() {
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (session) {
-      router.push("/dashboard"); // Redirect to dashboard if logged in
-    }
-  }, [session, router]);
+  if (session) {
+    redirect("/dashboard"); // ✅ Redirect if already logged in
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6">Sign in to Foreman</h1>
-      <button
-        className="bg-blue-500 text-white px-6 py-2 rounded-md mb-4"
-        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-      >
-        Sign in with Google
-      </button>
-      <button
-        className="bg-gray-800 text-white px-6 py-2 rounded-md"
-        onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
-      >
-        Sign in with GitHub
-      </button>
+    <div className="flex justify-between min-h-screen">
+      <Image src="/Pattern-1 (1).svg" alt="pattern" width={208} height={200} />
+
+      <div className="flex flex-grow flex-col items-center justify-center">
+        <h1 className="text-[30px] mb-10 text-amber-950 font-semibold">
+          Sign in to Foreman
+        </h1>
+        {/* ✅ Server-Action-Based Sign-In Buttons */}
+        <SignInButton provider="google" />
+        <SignInButton provider="github" />
+      </div>
+      <Image src="/pattern-2 (10).svg" alt="pattern2" width={208} height={100} />
     </div>
   );
 }
