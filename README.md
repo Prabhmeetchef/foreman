@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🚀 Foreman – AI-Powered Medical Research Assistant
+🔬 Instantly find evidence-based answers, clinical studies, and case reports without the noise.
 
-## Getting Started
 
-First, run the development server:
 
-```bash
+📌 Features
+✅ AI-powered medical research assistant
+✅ Search and analyze symptoms, case studies, and clinical trials
+✅ Fetches structured data from Google Scholar, PubMed, and medical sources
+✅ Fast & accurate AI-generated insights
+✅ Secure GitHub & Google authentication
+
+💻 Tech Stack
+Frontend: Next.js 15 (App Router), Tailwind CSS, TypeScript
+Backend: NextAuth.js (GitHub & Google OAuth)
+Database: Not needed (yet), but possible future integration
+APIs Used: Google Scholar API, OpenAI (for summarization)
+📦 Installation & Setup
+1️⃣ Clone the Repo
+sh
+Copy
+Edit
+git clone https://github.com/yourusername/foreman.git
+cd foreman
+2️⃣ Install Dependencies
+sh
+Copy
+Edit
+npm install --legacy-peer-deps
+3️⃣ Setup Environment Variables
+Create a .env.local file and add:
+
+ini
+Copy
+Edit
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+NEXTAUTH_SECRET=your_random_secret
+NEXTAUTH_URL=http://localhost:3000
+4️⃣ Run the App
+sh
+Copy
+Edit
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Foreman will be live at: http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🔐 Authentication
+Foreman supports Google & GitHub OAuth via NextAuth.js.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To test authentication:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Click Sign in with Google or GitHub
+If login fails, check the redirect URIs in Google Cloud Console & GitHub Developer Settings
+🛠 Future Improvements
+✅ Integrate PubMed API for deep medical research
+✅ Enhance AI-generated medical insights with OpenAI’s GPT
+✅ Save research history for doctors & researchers
 
-## Learn More
+🤝 Contributing
+Want to improve Foreman? Contributions are welcome!
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fork the repo
+Create a new branch: git checkout -b feature-name
+Commit changes: git commit -m "Added new feature"
+Push & open a Pull Request
