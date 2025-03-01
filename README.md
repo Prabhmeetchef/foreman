@@ -1,4 +1,4 @@
-🚀 Foreman – AI-Powered Medical Research Assistant
++🚀 Foreman – AI-Powered Medical Research Assistant*
 🔬 Instantly find evidence-based answers, clinical studies, and case reports without the noise.
 
 
