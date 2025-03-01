@@ -1,4 +1,4 @@
-# 🚀 Foreman: Your AI-Powered Medical Research Assistant
+# 🕵️ Foreman: Your AI-Powered Medical Research Assistant
 
 **Uncover evidence-based insights, clinical studies, and case reports instantly, cutting through the noise.**
 
@@ -26,7 +26,7 @@ Navigating the vast sea of medical information is daunting. Researchers and clin
 
     ```bash
     git clone [[your-repo-link]](https://github.com/yourusername/foreman.git)
-    cd Foreman
+    cd foreman
     ```
 
 2.  **Install Dependencies:**
@@ -76,10 +76,6 @@ Feel free to fork the repository and contribute!
 1.  Create a new branch: `git checkout -b feature-name`
 2.  Commit your changes: `git commit -m "Added feature"`
 3.  Push and open a pull request.
-
-## 📜 License
-
-Foreman is released under the MIT License.
 
 ## 📧 Contact
 
