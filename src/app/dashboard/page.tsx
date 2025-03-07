@@ -74,7 +74,7 @@ export default function Dashboard() {
           </div>
         </nav>
 
-        <div className="p-4 mt-auto flex items-center gap-2">
+        <div className="p-4 my-auto flex items-center gap-2">
           <Image
             src={`${session?.user?.image}`}
             alt="avatar"
@@ -112,9 +112,15 @@ export default function Dashboard() {
             </div>
           ))}
           {isLoading && (
-            <div className="flex flex-col gap-2 p-4 rounded-lg bg-amber-50 self-start max-w-200 w-7/12 text-amber-950">
-              <span className="flex min-w-24">Processing..</span>
-            </div>
+          <div
+            className="flex min-w-16"
+          >
+          <span
+            className="p-4 max-w-7/12 rounded-lg min-w-16 text-amber-950 bg-amber-50"
+          >
+            processing..
+          </span>
+          </div>
           )}
         </div>
 
