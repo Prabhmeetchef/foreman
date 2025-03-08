@@ -60,6 +60,7 @@ export default function Dashboard() {
   const handleNewSession = () => {
     setMessages([]); // Clear messages
     setThreadId(null); // Reset threadId
+    window.location.reload(); 
   };
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function Dashboard() {
           </div>
         </nav>
 
-        <div className="p-4 my-auto flex items-center gap-2">
+        <div className="p-4 my-auto flex items-center gap-2 justify-between">
           {session?.user?.image ? (
             <Image
               src={`${session?.user?.image}`}
