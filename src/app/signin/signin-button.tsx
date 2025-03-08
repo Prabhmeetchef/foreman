@@ -9,7 +9,7 @@ export default function SignInButton({ provider }: { provider: string }) {
       onClick={() => signIn(provider, { callbackUrl: "/dashboard" })}
     >
       Sign in with {provider.charAt(0).toUpperCase() + provider.slice(1)}{" "}
-      <Image src={`/${provider}.svg`} alt={provider} width={29} height={29} />
+      <Image src={`/${provider}.svg`} alt={provider} width={29} height={29} className="w-[29px] h-[29px]"/>
     </button>
   );
 }

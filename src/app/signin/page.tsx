@@ -13,7 +13,7 @@ export default async function SignIn() {
 
   return (
     <div className="flex justify-between min-h-screen">
-      <Image src="/Pattern-1 (1).svg" alt="pattern" width={208} height={200} />
+      <Image src="/Pattern-1 (1).svg" alt="pattern" width={208} height={200} className="hidden sm:block"/>
 
       <div className="flex flex-grow flex-col items-center justify-center">
         <h1 className="text-[30px] mb-10 text-amber-950 font-semibold">
@@ -23,7 +23,7 @@ export default async function SignIn() {
         <SignInButton provider="google" />
         <SignInButton provider="github" />
       </div>
-      <Image src="/pattern-2 (10).svg" alt="pattern2" width={208} height={100} />
+      <Image src="/pattern-2 (10).svg" alt="pattern2" width={208} height={100} className="hidden sm:block"/>
     </div>
   );
 }

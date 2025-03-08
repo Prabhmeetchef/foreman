@@ -62,7 +62,6 @@ export default function Dashboard() {
     setThreadId(null); // Reset threadId
     window.location.reload(); 
   };
-
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signin"); // Redirect to sign-in if not logged in
@@ -79,7 +78,7 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-background justify-between">
       {/* Sidebar */}
-      <div className="w-60 border-r bg-[#ede9e4] flex flex-col border-[#c6bdab] min-w-60">
+      <div className="w-60 border-r bg-[#ede9e4] flex-col border-[#c6bdab] min-w-60 hidden sm:flex">
         <div className="p-4 border-[#c6bdab] border-b">
           <Image src="/logo@1x.png" alt="logo" width={120} height={60} />
         </div>
