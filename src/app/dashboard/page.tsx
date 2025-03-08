@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuShortcut
+  DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
 import ReactMarkdown from "react-markdown"; // Import react-markdown
 export default function Dashboard() {
@@ -112,6 +112,12 @@ export default function Dashboard() {
               width={60}
               height={60}
               className="h-10 w-10 bg-amber-800 rounded-full"
+              onError={(e) => {
+                e.currentTarget.onerror = null; // Prevent infinite loop
+                e.currentTarget.src = ""; // Remove the broken image
+                e.currentTarget.style.display = "none"; // Hide the image element
+                (e.currentTarget.nextElementSibling as HTMLElement).style.display = "flex"; // Show the initial div
+              }}
             />
           ) : (
             <div className="h-10 w-10 bg-amber-50 text-amber-900 rounded-full flex items-center justify-center">
@@ -155,9 +161,11 @@ export default function Dashboard() {
                   GitHub
                 </a>
               </DropdownMenuItem>
-              <Link href="/contact"><DropdownMenuItem className="hover:bg-amber-50 hover:cursor-pointer">
-                Support
-              </DropdownMenuItem></Link>
+              <Link href="/contact">
+                <DropdownMenuItem className="hover:bg-amber-50 hover:cursor-pointer">
+                  Support
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem disabled>API</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

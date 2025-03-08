@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function SignInButton({ provider }: { provider: string }) {
   return (
     <button
-      className="flex gap-2 bg-white text-black px-6 py-2 rounded-[6px] mb-4 border-amber-950 border-2 hover:border-amber-900 hover:border-[3.2px] hover:cursor-pointer"
+      className="flex gap-2 bg-white text-black px-8 py-[10px] rounded-[6px] mb-4 border-amber-950 border-2 hover:border-amber-700 hover:bg-amber-50 hover:cursor-pointer"
       onClick={() => signIn(provider, { callbackUrl: "/dashboard" })}
     >
       Sign in with {provider.charAt(0).toUpperCase() + provider.slice(1)}{" "}
