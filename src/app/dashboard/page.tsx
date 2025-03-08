@@ -12,8 +12,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
+  DropdownMenuShortcut
 } from "@/components/ui/dropdown-menu";
 import ReactMarkdown from "react-markdown"; // Import react-markdown
 export default function Dashboard() {
@@ -105,13 +105,19 @@ export default function Dashboard() {
         </nav>
 
         <div className="p-4 my-auto flex items-center gap-2">
-          <Image
-            src={`${session?.user?.image}`}
-            alt="avatar"
-            width={60}
-            height={60}
-            className="h-10 w-10 bg-amber-800 rounded-full"
-          />
+          {session?.user?.image ? (
+            <Image
+              src={`${session?.user?.image}`}
+              alt="avatar"
+              width={60}
+              height={60}
+              className="h-10 w-10 bg-amber-800 rounded-full"
+            />
+          ) : (
+            <div className="h-10 w-10 bg-amber-50 text-amber-900 rounded-full flex items-center justify-center">
+              {session?.user?.name?.charAt(0)}
+            </div>
+          )}
           <div className="flex flex-col">
             <span className="text-sm font-medium text-amber-950">
               {session?.user?.name}
