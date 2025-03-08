@@ -155,9 +155,9 @@ export default function Dashboard() {
                   GitHub
                 </a>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-amber-50">
-                <Link href="/contact">Support</Link>
-              </DropdownMenuItem>
+              <Link href="/contact"><DropdownMenuItem className="hover:bg-amber-50 hover:cursor-pointer">
+                Support
+              </DropdownMenuItem></Link>
               <DropdownMenuItem disabled>API</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
