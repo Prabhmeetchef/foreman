@@ -33,28 +33,33 @@ async function* streamToAsyncIterable(stream: ReadableStream<Uint8Array>): Async
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, threadId } = await req.json();
 
     if (!message) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
 
     const langbase = new Langbase();
-    const response = await langbase.pipe.run({
+    const { stream, threadId: newThreadId } = await langbase.pipe.run({
       stream: true,
       apiKey: process.env.NEXT_PUBLIC_LANGBASE_API_KEY!,
       messages: [{ role: "user", content: message }],
+      threadId: threadId, // Include the threadId if it exists
     });
 
     // Collect all streamed chunks into a single response string
     let fullResponse = "";
-    for await (const chunk of getRunner(streamToAsyncIterable(response.stream))) {
+    for await (const chunk of getRunner(streamToAsyncIterable(stream))) {
       fullResponse += chunk;
     }
 
-    console.log("Stream type:", typeof response.stream, response.stream);
+    // Log the threadId for debugging
+    console.log("Thread ID:", newThreadId);
 
-    return NextResponse.json({ response: fullResponse });
+    return NextResponse.json({ 
+      response: fullResponse,
+      threadId: newThreadId // Return the threadId to the client
+    });
   } catch (error) {
     console.error("Langbase API error:", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
