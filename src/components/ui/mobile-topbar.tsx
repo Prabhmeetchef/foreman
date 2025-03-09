@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import { Menu, X, Search, Settings, EllipsisVertical } from "lucide-react";
+import { Menu, X, EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -14,12 +14,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-interface MobileTopbarProps {
-  handleNewSession: () => void;
-}
-
-export default function MobileTopbar({ handleNewSession }: MobileTopbarProps) {
+export default function MobileTopbar() {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
 

@@ -78,7 +78,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen bg-background justify-between">
-      < MobileTopbar />
+      <MobileTopbar />
       {/* Sidebar */}
       <div className="w-60 border-r bg-[#ede9e4] flex-col border-[#c6bdab] min-w-60 hidden sm:flex">
         <div className="p-4 border-[#c6bdab] border-b">
