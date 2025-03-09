@@ -194,7 +194,7 @@ export default function Dashboard() {
             >
               <div
                 key={index}
-                className={`p-4 max-w-7/12 rounded-lg min-w-16 ${
+                className={`p-2 max-w-7/12 rounded-lg min-w-16 sm:p-4 ${
                   msg.sender === "user"
                     ? "bg-amber-950 text-white self-end"
                     : "bg-amber-50 text-amber-950 self-start"
