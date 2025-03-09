@@ -184,6 +184,7 @@ export default function Dashboard() {
       {/* Main Content - Chat Interface */}
       <div className="flex flex-col flex-grow p-6 justify-between items-center gap-2">
         <div className="flex-1 overflow-auto space-y-4 rounded-md w-full max-w-240 p-2 scrollbar-thin scrollbar-thumb-amber-950 scrollbar-track-amber-50">
+          <span className="flex w-full h-10 sm:hidden"></span>
           {messages.map((msg, index) => (
             <div
               key={index}
