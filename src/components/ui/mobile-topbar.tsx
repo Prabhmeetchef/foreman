@@ -76,16 +76,8 @@ export default function MobileTopbar() {
               <DropdownMenuContent className="w-40 bg-white border border-[#c6bdab]">
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    Profile
-                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
                     Billing
                     <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    Settings
-                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuItem className="hover:bg-amber-50">

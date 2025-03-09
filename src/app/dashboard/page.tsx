@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type React from "react";
-import { Send, Search, Settings, EllipsisVertical } from "lucide-react";
+import { Send, Search, EllipsisVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,10 +94,6 @@ export default function Dashboard() {
               <Search className="text-amber-950" />
               New Session
             </button>
-            <button className="flex w-full justify-start gap-2 font-normal p-[10px] hover:bg-[#e1d9cf] rounded-[6px]">
-              <Settings className="text-amber-950" />
-              Research Settings
-            </button>
           </div>
           <div className="px-6 py-2">
             <h2 className="text-sm font-medium opacity-60 text-amber-950">
@@ -143,16 +139,8 @@ export default function Dashboard() {
             <DropdownMenuContent className="w-40 bg-white border border-[#c6bdab]">
               <DropdownMenuGroup>
                 <DropdownMenuItem>
-                  Profile
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
                   Billing
                   <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Settings
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuItem className="hover:bg-amber-50">
