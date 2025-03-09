@@ -16,6 +16,7 @@ import {
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
 import ReactMarkdown from "react-markdown"; // Import react-markdown
+import MobileTopbar from "../../components/ui/mobile-topbar";
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -77,6 +78,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen bg-background justify-between">
+      < MobileTopbar />
       {/* Sidebar */}
       <div className="w-60 border-r bg-[#ede9e4] flex-col border-[#c6bdab] min-w-60 hidden sm:flex">
         <div className="p-4 border-[#c6bdab] border-b">
