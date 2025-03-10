@@ -42,7 +42,7 @@ export default function Contact() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-12">
           <Link
-            href="/about"
+            href="/"
             className="text-gray-800 hover:text-amber-700 transition-colors"
           >
             About
@@ -64,6 +64,31 @@ export default function Contact() {
         </div>
 
         {/* Mobile Menu Button */}
+        {isOpen && (
+          <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden flex flex-col items-center space-y-4 py-6 z-50">
+            <Link
+              href="/"
+              className="text-gray-800 hover:text-amber-700 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-800 hover:text-amber-700 transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Contact
+            </Link>
+            <Link
+              href="/signin"
+              className="text-[18px] bg-[#F6F0E5] hover:bg-amber-200 text-amber-900 px-6 py-2 rounded-full transition-colors font-medium hover:font-semibold"
+              onClick={() => setIsOpen(false)}
+            >
+              Signin
+            </Link>
+          </div>
+        )}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden p-2 focus:outline-none"

@@ -20,7 +20,7 @@ export default function Home() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-12">
-          <Link href="/about" className="text-gray-800 hover:text-amber-700 transition-colors">
+          <Link href="/" className="text-gray-800 hover:text-amber-700 transition-colors">
             About
           </Link>
           <Link href="/contact" className="text-gray-800 hover:text-amber-700 transition-colors">
@@ -48,7 +48,7 @@ export default function Home() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden flex flex-col items-center space-y-4 py-6 z-50">
-          <Link href="/about" className="text-gray-800 hover:text-amber-700 transition-colors" onClick={() => setIsOpen(false)}>
+          <Link href="/" className="text-gray-800 hover:text-amber-700 transition-colors" onClick={() => setIsOpen(false)}>
             About
           </Link>
           <Link href="/contact" className="text-gray-800 hover:text-amber-700 transition-colors" onClick={() => setIsOpen(false)}>

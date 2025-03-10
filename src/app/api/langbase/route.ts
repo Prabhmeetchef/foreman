@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { Langbase } from "langbase";
-
+import { prisma } from "@/app/lib/prisma"; // ✅ add your prisma client import
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth"; // Adjust the path as necessary
 async function* getRunner(stream: AsyncIterable<Uint8Array>): AsyncIterable<string> {
   const decoder = new TextDecoder();
   for await (const chunk of stream) {
@@ -34,7 +36,13 @@ async function* streamToAsyncIterable(stream: ReadableStream<Uint8Array>): Async
 export async function POST(req: Request) {
   try {
     const { message, threadId } = await req.json();
-
+    // Get user email from session
+    const session = await getServerSession(authOptions);
+    const userEmail = session?.user?.email;
+    
+    if (!userEmail) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     if (!message) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
@@ -44,7 +52,7 @@ export async function POST(req: Request) {
       stream: true,
       apiKey: process.env.NEXT_PUBLIC_LANGBASE_API_KEY!,
       messages: [{ role: "user", content: message }],
-      threadId: threadId, // Include the threadId if it exists
+      threadId: threadId,
     });
 
     // Collect all streamed chunks into a single response string
@@ -53,13 +61,39 @@ export async function POST(req: Request) {
       fullResponse += chunk;
     }
 
-    // Log the threadId for debugging
-    console.log("Thread ID:", newThreadId);
+    const finalThreadId = threadId || newThreadId;
 
-    return NextResponse.json({ 
-      response: fullResponse,
-      threadId: newThreadId // Return the threadId to the client
+    // ✅ Save message in Prisma DB
+    const newMessages = [{ user: message }, { chat: fullResponse }];
+
+    const existingThread = await prisma.conversation.findUnique({
+      where: { threadId: finalThreadId },
     });
+
+    if (existingThread) {
+      await prisma.conversation.update({
+        where: { threadId: finalThreadId },
+        data: {
+          messages: {
+            push: newMessages,
+          },
+        },
+      });
+    } else {
+      await prisma.conversation.create({
+        data: {
+          threadId: finalThreadId,
+          messages: newMessages,
+          userEmail: userEmail, // Add user email
+        },
+      });
+    }
+
+    return NextResponse.json({
+      response: fullResponse,
+      threadId: finalThreadId,
+    });
+
   } catch (error) {
     console.error("Langbase API error:", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });

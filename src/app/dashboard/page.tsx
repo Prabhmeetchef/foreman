@@ -15,19 +15,27 @@ import {
   DropdownMenuTrigger,
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
-import ReactMarkdown from "react-markdown"; // Import react-markdown
+import ReactMarkdown from "react-markdown";
 import MobileTopbar from "../../components/ui/mobile-topbar";
+
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<
     { text: string; sender: "user" | "ai" }[]
   >([]);
-  const [threadId, setThreadId] = useState<string | null>(null); // Add threadId state
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [threads, setThreads] = useState<
+    { threadId: string; messages: { user?: string; chat?: string }[] }[]
+  >([]);
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    // Add at the beginning of handleSubmit
+    console.log("Submitting with thread ID:", threadId);
     e.preventDefault();
     if (!query.trim()) return;
 
@@ -39,14 +47,14 @@ export default function Dashboard() {
       const response = await fetch("/api/langbase", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: query, threadId }), // Include threadId in the request
+        body: JSON.stringify({ message: query, threadId }),
       });
 
       const data = await response.json();
       if (data.error) throw new Error(data.error);
 
       setMessages((prev) => [...prev, { text: data.response, sender: "ai" }]);
-      setThreadId(data.threadId); // Update threadId with the new value
+      setThreadId(data.threadId);
     } catch (err) {
       console.error("Error fetching response:", err);
       setMessages((prev) => [
@@ -59,15 +67,31 @@ export default function Dashboard() {
   };
 
   const handleNewSession = () => {
-    setMessages([]); // Clear messages
-    setThreadId(null); // Reset threadId
-    window.location.reload(); 
+    setMessages([]);
+    setThreadId(null);
+    setSelectedThreadId(null); // also reset selection
   };
+
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/signin"); // Redirect to sign-in if not logged in
+      router.push("/signin");
     }
   }, [status, router]);
+
+  useEffect(() => {
+    const fetchThreads = async () => {
+      try {
+        const res = await fetch("/api/langbase/get-threads");
+        const data = await res.json();
+        if (data.threads) {
+          setThreads(data.threads);
+        }
+      } catch (err) {
+        console.error("Error fetching threads:", err);
+      }
+    };
+    fetchThreads();
+  }, []);
 
   if (status === "loading")
     return (
@@ -88,7 +112,7 @@ export default function Dashboard() {
         <nav className="flex-1 space-y-1 border-[#c6bdab] border-b">
           <div className="flex flex-col w-full gap-2 p-4 border-[#c6bdab] border-b">
             <button
-              onClick={handleNewSession} // Use handleNewSession
+              onClick={handleNewSession}
               className="flex w-full justify-start gap-2 font-normal p-[10px] hover:bg-[#e1d9cf] rounded-[6px]"
             >
               <Search className="text-amber-950" />
@@ -100,8 +124,60 @@ export default function Dashboard() {
               Previously
             </h2>
           </div>
-        </nav>
 
+          {/* 👉 Thread list */}
+          <div className="flex flex-col gap-1 px-4 pb-4">
+            {threads.map((thread) => (
+              <button
+                key={thread.threadId}
+                onClick={() => {
+                  // prevent redundant state updates
+                  if (thread.threadId === selectedThreadId) return;
+
+                  // Replace this part of the onClick handler for thread selection
+                  setSelectedThreadId(thread.threadId);
+                  setThreadId(thread.threadId);
+
+                  // This is the problematic mapping code that needs to be fixed
+                    const mapped: { text: string; sender: "user" | "ai" }[] = [];
+
+                  // Process each message or message array
+                  thread.messages.forEach((msgItem) => {
+                    // Handle regular message objects
+                    if (msgItem.user !== undefined) {
+                      mapped.push({ text: msgItem.user, sender: "user" });
+                    } else if (msgItem.chat !== undefined) {
+                      mapped.push({ text: msgItem.chat, sender: "ai" });
+                    }
+                    // Handle message arrays (nested format)
+                    else if (Array.isArray(msgItem)) {
+                      msgItem.forEach((subMsg) => {
+                        if (subMsg.user !== undefined) {
+                          mapped.push({ text: subMsg.user, sender: "user" });
+                        } else if (subMsg.chat !== undefined) {
+                          mapped.push({ text: subMsg.chat, sender: "ai" });
+                        }
+                      });
+                    }
+                  });
+                  setMessages(
+                    mapped as { text: string; sender: "user" | "ai" }[]
+                  );
+                }}
+                className={`text-left text-sm font-normal px-3 py-2 rounded-md hover:bg-[#e1d9cf] text-amber-950 ${
+                  selectedThreadId === thread.threadId
+                    ? "bg-[#e1d9cf] font-semibold"
+                    : ""
+                }`}
+              >
+                {/* Show first message content instead of just ID */}
+                {thread.messages[0]?.user
+                  ? thread.messages[0].user.substring(0, 15) + "..."
+                  : thread.threadId.slice(0, 10) + "..."}
+              </button>
+            ))}
+          </div>
+        </nav>
         <div className="p-4 my-auto flex items-center gap-2 justify-between">
           {session?.user?.image ? (
             <Image
@@ -114,7 +190,9 @@ export default function Dashboard() {
                 e.currentTarget.onerror = null; // Prevent infinite loop
                 e.currentTarget.src = ""; // Remove the broken image
                 e.currentTarget.style.display = "none"; // Hide the image element
-                (e.currentTarget.nextElementSibling as HTMLElement).style.display = "flex"; // Show the initial div
+                (
+                  e.currentTarget.nextElementSibling as HTMLElement
+                ).style.display = "flex"; // Show the initial div
               }}
             />
           ) : (
