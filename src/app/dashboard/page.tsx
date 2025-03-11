@@ -21,7 +21,6 @@ import MobileTopbar from "../../components/ui/mobile-topbar";
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<
@@ -32,9 +31,22 @@ export default function Dashboard() {
     { threadId: string; messages: { user?: string; chat?: string }[] }[]
   >([]);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
-
+  const [isFetchingThreads, setIsFetchingThreads] = useState(false);
+  const fetchThreads = async () => {
+    setIsFetchingThreads(true); // Set loading state to true
+    try {
+      const res = await fetch("/api/langbase/get-threads");
+      const data = await res.json();
+      if (data.threads) {
+        setThreads(data.threads);
+      }
+    } catch (err) {
+      console.error("Error fetching threads:", err);
+    } finally {
+      setIsFetchingThreads(false); // Set loading state to false
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
-    // Add at the beginning of handleSubmit
     console.log("Submitting with thread ID:", threadId);
     e.preventDefault();
     if (!query.trim()) return;
@@ -53,17 +65,23 @@ export default function Dashboard() {
       const data = await response.json();
       if (data.error) throw new Error(data.error);
 
+      // Set isLoading to false BEFORE updating the messages
+      setIsLoading(false);
+
+      // Update the messages with the AI response
       setMessages((prev) => [...prev, { text: data.response, sender: "ai" }]);
       setThreadId(data.threadId);
+
+      // Fetch threads again to update the list
+      await fetchThreads();
     } catch (err) {
       console.error("Error fetching response:", err);
+      setIsLoading(false); // Ensure isLoading is set to false even if there's an error
       setMessages((prev) => [
         ...prev,
         { text: "Error retrieving response", sender: "ai" },
       ]);
     }
-
-    setIsLoading(false);
   };
 
   const handleNewSession = () => {
@@ -125,58 +143,54 @@ export default function Dashboard() {
             </h2>
           </div>
 
-          {/* 👉 Thread list */}
-          <div className="flex flex-col gap-1 px-4 pb-4">
-            {threads.map((thread) => (
-              <button
-                key={thread.threadId}
-                onClick={() => {
-                  // prevent redundant state updates
-                  if (thread.threadId === selectedThreadId) return;
+          {isFetchingThreads ? (
+            <div className="px-4 pb-4 text-sm text-amber-950 opacity-60">
+              fetching...
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1 px-4 pb-4">
+              {threads.map((thread) => (
+                <button
+                  key={thread.threadId}
+                  onClick={() => {
+                    if (thread.threadId === selectedThreadId) return;
+                    setSelectedThreadId(thread.threadId);
+                    setThreadId(thread.threadId);
 
-                  // Replace this part of the onClick handler for thread selection
-                  setSelectedThreadId(thread.threadId);
-                  setThreadId(thread.threadId);
-
-                  // This is the problematic mapping code that needs to be fixed
-                    const mapped: { text: string; sender: "user" | "ai" }[] = [];
-
-                  // Process each message or message array
-                  thread.messages.forEach((msgItem) => {
-                    // Handle regular message objects
-                    if (msgItem.user !== undefined) {
-                      mapped.push({ text: msgItem.user, sender: "user" });
-                    } else if (msgItem.chat !== undefined) {
-                      mapped.push({ text: msgItem.chat, sender: "ai" });
-                    }
-                    // Handle message arrays (nested format)
-                    else if (Array.isArray(msgItem)) {
-                      msgItem.forEach((subMsg) => {
-                        if (subMsg.user !== undefined) {
-                          mapped.push({ text: subMsg.user, sender: "user" });
-                        } else if (subMsg.chat !== undefined) {
-                          mapped.push({ text: subMsg.chat, sender: "ai" });
-                        }
-                      });
-                    }
-                  });
-                  setMessages(
-                    mapped as { text: string; sender: "user" | "ai" }[]
-                  );
-                }}
-                className={`text-left text-sm font-normal px-3 py-2 rounded-md hover:bg-[#e1d9cf] text-amber-950 ${
-                  selectedThreadId === thread.threadId
-                    ? "bg-[#e1d9cf] font-semibold"
-                    : ""
-                }`}
-              >
-                {/* Show first message content instead of just ID */}
-                {thread.messages[0]?.user
-                  ? thread.messages[0].user.substring(0, 15) + "..."
-                  : thread.threadId.slice(0, 10) + "..."}
-              </button>
-            ))}
-          </div>
+                    const mapped: { text: string; sender: "user" | "ai" }[] =
+                      [];
+                    thread.messages.forEach((msgItem) => {
+                      if (msgItem.user !== undefined) {
+                        mapped.push({ text: msgItem.user, sender: "user" });
+                      } else if (msgItem.chat !== undefined) {
+                        mapped.push({ text: msgItem.chat, sender: "ai" });
+                      } else if (Array.isArray(msgItem)) {
+                        msgItem.forEach((subMsg) => {
+                          if (subMsg.user !== undefined) {
+                            mapped.push({ text: subMsg.user, sender: "user" });
+                          } else if (subMsg.chat !== undefined) {
+                            mapped.push({ text: subMsg.chat, sender: "ai" });
+                          }
+                        });
+                      }
+                    });
+                    setMessages(
+                      mapped as { text: string; sender: "user" | "ai" }[]
+                    );
+                  }}
+                  className={`text-left text-sm font-normal px-3 py-2 rounded-md hover:bg-[#e1d9cf] text-amber-950 ${
+                    selectedThreadId === thread.threadId
+                      ? "bg-[#e1d9cf] font-semibold"
+                      : ""
+                  }`}
+                >
+                  {thread.messages[0]?.user
+                    ? thread.messages[0].user.substring(0, 15) + "..."
+                    : thread.threadId.slice(0, 10) + "..."}
+                </button>
+              ))}
+            </div>
+          )}
         </nav>
         <div className="p-4 my-auto flex items-center gap-2 justify-between">
           {session?.user?.image ? (
