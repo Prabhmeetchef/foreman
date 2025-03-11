@@ -113,14 +113,62 @@ export default function Dashboard() {
 
   if (status === "loading")
     return (
-      <div className="flex items-center justify-center w-full h-[100vh]">
+      <div className="flex items-center justify-center w-full h-[100vh] ">
         <span id="loader2"></span>
       </div>
     );
 
   return (
     <div className="flex h-screen bg-background justify-between">
-      <MobileTopbar />
+      <MobileTopbar>
+        {isFetchingThreads ? (
+          <div className="px-4 pb-4 text-sm text-amber-950 opacity-60">
+            fetching...
+          </div>
+        ) : (
+          <div className="flex flex-col gap-1 px-4 pb-4 ">
+            {threads.map((thread) => (
+              <button
+                key={thread.threadId}
+                onClick={() => {
+                  if (thread.threadId === selectedThreadId) return;
+                  setSelectedThreadId(thread.threadId);
+                  setThreadId(thread.threadId);
+
+                  const mapped: { text: string; sender: "user" | "ai" }[] = [];
+                  thread.messages.forEach((msgItem) => {
+                    if (msgItem.user !== undefined) {
+                      mapped.push({ text: msgItem.user, sender: "user" });
+                    } else if (msgItem.chat !== undefined) {
+                      mapped.push({ text: msgItem.chat, sender: "ai" });
+                    } else if (Array.isArray(msgItem)) {
+                      msgItem.forEach((subMsg) => {
+                        if (subMsg.user !== undefined) {
+                          mapped.push({ text: subMsg.user, sender: "user" });
+                        } else if (subMsg.chat !== undefined) {
+                          mapped.push({ text: subMsg.chat, sender: "ai" });
+                        }
+                      });
+                    }
+                  });
+                  setMessages(
+                    mapped as { text: string; sender: "user" | "ai" }[]
+                  );
+                }}
+                className={`text-left text-sm font-normal px-3 py-2 rounded-md hover:bg-[#e1d9cf] text-amber-950 ${
+                  selectedThreadId === thread.threadId
+                    ? "bg-[#e1d9cf] font-semibold"
+                    : ""
+                }`}
+              >
+                {thread.messages[0]?.user
+                  ? thread.messages[0].user.substring(0, 15) + "..."
+                  : thread.threadId.slice(0, 10) + "..."}
+              </button>
+            ))}
+          </div>
+        )}
+      </MobileTopbar>
       {/* Sidebar */}
       <div className="w-60 border-r bg-[#ede9e4] flex-col border-[#c6bdab] min-w-60 hidden sm:flex">
         <div className="p-4 border-[#c6bdab] border-b">

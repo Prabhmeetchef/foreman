@@ -14,7 +14,12 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-export default function MobileTopbar() {
+
+interface MobileTopbarProps {
+  children?: React.ReactNode; // Add this line to accept children
+}
+
+export default function MobileTopbar({ children }: MobileTopbarProps) {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -31,41 +36,38 @@ export default function MobileTopbar() {
 
           <div className="border-t border-[#c6bdab] py-2">
             <h2 className="text-sm font-medium opacity-60 text-amber-950 px-2">Previously</h2>
-            <div className="w-full h-60">
-
-
-
-
-
+            <div className="p-2 w-full h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-950 scrollbar-track-amber-50">
+              {/* Render the children here */}
+              {children}
             </div>
           </div>
 
           {/* User Profile & Options */}
           <div className="p-4 flex items-center gap-2 justify-between border-t border-[#c6bdab]">
             <div className="flex gap-2">
-            {session?.user?.image ? (
-              <Image
-                src={session.user.image}
-                alt="avatar"
-                width={40}
-                height={40}
-                className="h-10 w-10 bg-amber-800 rounded-full"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = "";
-                  e.currentTarget.style.display = "none";
-                  (e.currentTarget.nextElementSibling as HTMLElement).style.display = "flex";
-                }}
-              />
-            ) : (
-              <div className="h-10 w-10 bg-amber-50 text-amber-900 rounded-full flex items-center justify-center">
-                {session?.user?.name?.charAt(0)}
+              {session?.user?.image ? (
+                <Image
+                  src={session.user.image}
+                  alt="avatar"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 bg-amber-800 rounded-full"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "";
+                    e.currentTarget.style.display = "none";
+                    (e.currentTarget.nextElementSibling as HTMLElement).style.display = "flex";
+                  }}
+                />
+              ) : (
+                <div className="h-10 w-10 bg-amber-50 text-amber-900 rounded-full flex items-center justify-center">
+                  {session?.user?.name?.charAt(0)}
+                </div>
+              )}
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-amber-950">{session?.user?.name}</span>
+                <span className="text-xs w-[120px] truncate text-amber-900 opacity-60">{session?.user?.email}</span>
               </div>
-            )}
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-amber-950">{session?.user?.name}</span>
-              <span className="text-xs w-[120px] truncate text-amber-900 opacity-60">{session?.user?.email}</span>
-            </div>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="focus:outline-none pl-2">
